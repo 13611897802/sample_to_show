@@ -39,8 +39,13 @@
             transform: translateY(-5px);
         }
 
-        .clock-section, .countdown-section {
-            margin-bottom: 40px;
+        /* 时钟部分 */
+        .clock-section {
+            margin-bottom: 30px;
+        }
+
+        .clock-only .clock-section {
+            margin-bottom: 0;
         }
 
         .section-title {
@@ -53,7 +58,7 @@
         }
 
         .time-display {
-            font-size: 4rem;
+            font-size: 5rem;
             color: #ffffff;
             font-weight: 300;
             letter-spacing: 3px;
@@ -64,7 +69,7 @@
         }
 
         .date-display {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: rgba(255, 255, 255, 0.8);
             font-weight: 400;
             letter-spacing: 1px;
@@ -72,11 +77,61 @@
         }
 
         .week-display {
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: rgba(255, 255, 255, 0.6);
             font-weight: 400;
             letter-spacing: 2px;
             text-transform: uppercase;
+        }
+
+        /* 切换按钮 */
+        .toggle-container {
+            margin-top: 30px;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(135deg, #00c9ff, #92fe9d);
+            color: #0f2027;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 201, 255, 0.4);
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .toggle-btn.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* 倒计时部分 */
+        .countdown-section {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.3s ease, margin-top 0.5s ease;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .countdown-section.show {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 40px;
         }
 
         .countdown-display {
@@ -174,6 +229,12 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             margin: 40px 0;
             border: none;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .divider.show {
+            opacity: 1;
         }
 
         @media (max-width: 768px) {
@@ -182,7 +243,7 @@
             }
             
             .time-display {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
             
             .countdown-display {
@@ -202,11 +263,16 @@
                 padding: 10px 20px;
                 min-width: 80px;
             }
+            
+            .toggle-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
         }
 
         @media (max-width: 480px) {
             .time-display {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
             
             .countdown-display {
@@ -220,7 +286,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="container">
         <!-- 时钟部分 -->
         <div class="clock-section">
             <h2 class="section-title">当前时间</h2>
@@ -229,10 +295,19 @@
             <div class="week-display" id="week">星期一</div>
         </div>
 
-        <hr class="divider">
+        <!-- 切换按钮 -->
+        <div class="toggle-container">
+            <button class="toggle-btn" id="toggleBtn">
+                <span class="toggle-icon">▼</span>
+                <span id="toggleText">显示倒计时</span>
+            </button>
+        </div>
+
+        <!-- 分割线 -->
+        <hr class="divider" id="divider">
 
         <!-- 倒计时部分 -->
-        <div class="countdown-section">
+        <div class="countdown-section" id="countdownSection">
             <h2 class="section-title">倒计时</h2>
             <div class="countdown-display" id="countdown">00:00:00</div>
             
@@ -357,6 +432,38 @@
             document.getElementById('secondsInput').value = 10;
         }
 
+        // 显示/隐藏倒计时功能
+        const toggleBtn = document.getElementById('toggleBtn');
+        const toggleText = document.getElementById('toggleText');
+        const countdownSection = document.getElementById('countdownSection');
+        const divider = document.getElementById('divider');
+        const container = document.getElementById('container');
+        
+        let isCountdownVisible = false;
+        
+        toggleBtn.addEventListener('click', () => {
+            isCountdownVisible = !isCountdownVisible;
+            
+            if (isCountdownVisible) {
+                // 显示倒计时
+                countdownSection.classList.add('show');
+                divider.classList.add('show');
+                toggleBtn.classList.add('active');
+                toggleText.textContent = '隐藏倒计时';
+                container.classList.remove('clock-only');
+            } else {
+                // 隐藏倒计时
+                countdownSection.classList.remove('show');
+                divider.classList.remove('show');
+                toggleBtn.classList.remove('active');
+                toggleText.textContent = '显示倒计时';
+                container.classList.add('clock-only');
+                
+                // 暂停并重置倒计时
+                resetCountdown();
+            }
+        });
+
         // 事件监听
         document.getElementById('startBtn').addEventListener('click', startCountdown);
         document.getElementById('pauseBtn').addEventListener('click', pauseCountdown);
@@ -382,6 +489,9 @@
         updateTime();
         setInterval(updateTime, 1000);
         updateCountdownDisplay();
+        
+        // 初始状态为隐藏倒计时
+        container.classList.add('clock-only');
     </script>
 </body>
 </html>
