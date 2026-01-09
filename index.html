@@ -1,17 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="zh-CN">
+<head>
     <meta charset="UTF-8">
-        <title>中转网站</title>
-  </head>
-  <body>
-    <a href="http://106.13.167.227:15244/@login?redirect=%2F"><div>网盘跳转</div></a>
-<!-- <img src="img.jpg"  > -->
-    <div></div>
-    <a href="clock.html"><div>live clock</div></a>
-   </body>
+    <title>中转网站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:linear-gradient(135deg,#89f7fe,#66a6ff);
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+        }
+        .wrapper{
+            display:flex;
+            gap:40px;
+            flex-wrap:wrap;
+            justify-content:center;
+        }
+        .card{
+            width:200px;
+            padding:50px 30px;
+            background:#fff;
+            border-radius:16px;
+            text-align:center;
+            box-shadow:0 8px 20px rgba(0,0,0,.12);
+            transition:transform .3s ease,box-shadow .3s ease;
+        }
+        .card:hover{
+            transform:translateY(-6px);
+            box-shadow:0 12px 30px rgba(0,0,0,.18);
+        }
+        .card a{
+            display:block;
+            text-decoration:none;
+            color:#333;
+            font-size:18px;
+            font-weight:600;
+        }
+        .card a:hover{color:#66a6ff;}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="card">
+            <a href="http://106.13.167.227:15244/@login?redirect=%2F">网盘跳转</a>
+        </div>
+        <div class="card">
+            <a href="clock.html">live clock</a>
+        </div>
+    </div>
+</body>
 </html>
-
-
-
-
